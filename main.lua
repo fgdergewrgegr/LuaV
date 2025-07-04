@@ -1,1 +1,1 @@
-function class(conditions, methods, operators)
+function class(conditions, methods, operators)f
