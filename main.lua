@@ -1,1 +1,3 @@
-function class(conditions, methods, operators)f
+function class(conditions, methods, operators)
+	wergwer
+	wergwerg
