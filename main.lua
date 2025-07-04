@@ -1,0 +1,1 @@
+function class(conditions, methods, operators)
