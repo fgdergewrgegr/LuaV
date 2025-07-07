@@ -23,6 +23,7 @@ local s = __luav__.save
 
 -- sf["____"] = getgenv().____
 	sf["typeof"] = getgenv().typeof
+	sf["unpack"] = getgenv().unpack
 
 -- o["_____"] = cloneref(game:GetService("_____"))
 	o["w"] = cloneref(game:GetService("Workspace"))
@@ -75,6 +76,26 @@ function c.type(obj)
 	return (type == "table" and (obj["_luav_"] or type)) or type
 end
 
-
-
 function c.duplicate(num, obj)
+	local lt = {}
+	for a=1,num do lt[a] = obj end
+	return sf.unpack(lt)
+end; c.d, c.dup = c.duplicate, c.duplicate
+
+c.qw, c.qwait, c.quick_wait = c.dup(3, function(num)
+	if not(num) then return o.r.Heartbeat:Wait()
+	else local t, tt = tick(), 0
+		while tick() < t+num do
+			tt = tt + o.r.Heartbeat:Wait()
+		end; return tt
+	end
+end)
+
+c.pw, c.pwait, c.physic_wait = c.dup(3, function(num)
+	if not(num) then return o.r.RenderStepped:Wait()
+	else local t, tt = tick(), 0
+		while tick() < t+num do
+			tt = tt + o.r.RenderStepped:Wait()
+		end; return tt
+	end
+end)
