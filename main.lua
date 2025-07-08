@@ -1,4 +1,3 @@
-хуй
 getgenv().__luav__ = {
 	funcs = {
 		core = {},
