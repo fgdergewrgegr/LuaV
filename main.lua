@@ -8,6 +8,11 @@ getgenv().__luav__ = {
 	save = {
 		funcs = {},
 		objs = {}
+	},
+	data = {
+		props = {},
+		methods = {},
+		operators = {}
 	}
 }
 
@@ -20,6 +25,11 @@ local f = __luav__.funcs
 local s = __luav__.save
 	local so = s.objs
 	local sf = s.funcs
+
+local d = __luav__.data
+	local p = d.props
+	local m = d.methods
+	local op = d.operators
 
 -- sf["____"] = getgenv().____
 	sf["typeof"] = getgenv().typeof
@@ -98,4 +108,24 @@ c.pw, c.pwait, c.physic_wait = c.dup(3, function(num)
 			tt = tt + o.r.RenderStepped:Wait()
 		end; return tt
 	end
+end)
+
+c.ul, c.unlv, unluav = c.dup(3, function(...)
+	local lt = {...}
+	for i,obj in lt do
+		if cf.typeof(obj) == "table" and obj["luav"] then
+			lt[i] = obj[1]
+		end
+	end; return unpack(lt)
+end)
+
+local sftypeof = sf.typeof
+c.l, c.lv, c.luav = c.dup(3, function(...)
+	local lt = {...}
+	for i,obj in lt do
+		local type = sftypeof(obj)
+		local props = p[type]
+		local methods = m[type]
+		local operators = op[type]
+
 end)
