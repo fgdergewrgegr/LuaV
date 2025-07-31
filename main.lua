@@ -1,6 +1,6 @@
-getgenv().__luav__ = {
+getgenv().__luaw__ = {
 	funcs = {
-		core = {},
+		kenrel = {},
 		global = {},
 		normal = {}
 	},
@@ -12,24 +12,28 @@ getgenv().__luav__ = {
 	data = {
 		props = {},
 		methods = {},
-		operators = {}
+		operators = {},
+		tabes = {},
+		metatables = {}
 	}
 }
 
-local o = __luav__.objs
-local f = __luav__.funcs
-	local c = f.core
+local o = __luaw__.objs
+local f = __luaw__.funcs
+	local k = f.kenrel
 	local g = f.global
 	local n = f.normal
 
-local s = __luav__.save
+local s = __luaw__.save
 	local so = s.objs
 	local sf = s.funcs
 
-local d = __luav__.data
+local d = __luaw__.data
 	local p = d.props
 	local m = d.methods
 	local op = d.operators
+	local t = d.tables
+	local mt = d.metatables
 
 -- sf["____"] = getgenv().____
 	sf["typeof"] = getgenv().typeof
@@ -81,51 +85,60 @@ local d = __luav__.data
 		o["getmsg"] = DCSCE:WaitForChild("SayMessageRequest")
 	end; DCSCE = nil
 	
-function c.type(obj)
+function k.type(obj)
 	local type = sf.typeof(obj)
-	return (type == "table" and (obj["_luav_"] or type)) or type
+	return (type == "table" and obj["_luaw_"]) or type
 end
 
-function c.duplicate(num, obj)
+local sf_unpack = sf.unpack
+function k.duplicate(num, obj)
 	local lt = {}
 	for a=1,num do lt[a] = obj end
-	return sf.unpack(lt)
-end; c.d, c.dup = c.duplicate, c.duplicate
+	return sf_unpack(lt)
+end; k.d, k.dup = k.duplicate, k.duplicate
 
-c.qw, c.qwait, c.quick_wait = c.dup(3, function(num)
-	if not(num) then return o.r.Heartbeat:Wait()
-	else local t, tt = tick(), 0
-		while tick() < t+num do
-			tt = tt + o.r.Heartbeat:Wait()
-		end; return tt
-	end
-end)
+-- k.md, k.mdup, k.multy_duplicate = k.d(3, function(num, ...)
+-- 	local lt, dlt = {...}, {}
+-- 	for a=1,num do
+-- 		for _,v in lt do
+-- 			dlt[#dlt+1] = v
+-- 		end
+-- 	end; return sf.unpack(dlt)
+-- end)
 
-c.pw, c.pwait, c.physic_wait = c.dup(3, function(num)
-	if not(num) then return o.r.RenderStepped:Wait()
-	else local t, tt = tick(), 0
-		while tick() < t+num do
-			tt = tt + o.r.RenderStepped:Wait()
-		end; return tt
-	end
-end)
-
-c.ul, c.unlv, unluav = c.dup(3, function(...)
+k.ul, k.unlw, unluaw = k.dup(3, function(...)
 	local lt = {...}
 	for i,obj in lt do
-		if cf.typeof(obj) == "table" and obj["luav"] then
+		if cf.typeof(obj) == "table" and obj["_luaw_"] then
 			lt[i] = obj[1]
 		end
-	end; return unpack(lt)
+	end; return sf_unpack(lt)
 end)
 
-local sftypeof = sf.typeof
-c.l, c.lv, c.luav = c.dup(3, function(...)
+k.b, k.blt, k.build = k.dup(3, function(type)
+	if type then
+
+end)
+
+local sf_typeof = sf.typeof
+k.l, k.lw, k.luaw = k.dup(3, function(...)
 	local lt = {...}
 	for i,obj in lt do
-		local type = sftypeof(obj)
+		local type = sf_typeof(obj)
 		local props = p[type]
 		local methods = m[type]
 		local operators = op[type]
+		
 
 end)
+
+local function wait_help(event, num)
+	if not(num) then return event:Wait()
+	else local t, tt = tick(), 0
+		while tick() < t+num do
+			tt = tt + event:Wait()
+		end; return tt
+	end
+end; n.qw, n.qwait, n.quick_wait = k.dup(3, function(num) wait_help(o.r.Heartbeat, num) end)
+n.pw, n.pwait, n.physic_wait = k.dup(3, function(num) wait_help(o.r.RenderStepped, num) end)
+
