@@ -12,8 +12,6 @@
 			props = {},
 			methods = {},
 			operators = {},
-			tabes = {},
-			metatables = {},
 			idk = {},
 			text = {
 				letters = {},
@@ -164,11 +162,23 @@ end
 		end; return s.unpack(lt)
 	end)
 
-	k.b, k.blt, k.build = k.dup(3, function(type)
-		if type then
+	local function error_hook_method(...)
+		print("error_hook_method:",...)
+		k.error("this is hook_method")
+	end
 
-		end
-	end)
+	local meta_methods, hook_method_lt = {
+		"__index","__newindex","__concat",
+		"__unm","__add","__sub","__mul",
+		"__div","__idiv","__mod","__pow",
+		"__tostring","__eq","__lt","__le",
+		"__len","__iter"
+	}, {__call = function(s,obj,...)
+		local method, args = obj.method, {...}
+		obj.method = nil
+		return s.load(`return obj[1]:{method}(s.unpack(args))`)()
+	end}; for _,mm in meta_methods do hook_method_lt[mm] = error_hook_method end
+	d.hook_method = setmetatable({"hook_method"},hook_method_lt); meta_methods, hook_method_lt = nil, nil
 
 	k.l, k.lw, k.luaw = k.dup(3, function(...)
 		local lt = {...}
@@ -178,6 +188,32 @@ end
 			local methods = m[type]
 			local operators = op[type]
 			
+			if type == "Instance" then
+				lt[i] = setmetatable({obj, age = tick(), calls = 0, type = s.typeof(obj)},{
+					__index = function(s,i)
+						s.calls = s.calls+1
+						local prop, method = props[i], methods[i]
+						local output = (prop and prop()) or method
+						if not(output) then
+							s.method = i
+							return d.hook_method
+						end
+					end
+				})
+			else
+				lt[i] = setmetatable({obj, age = tick(), calls = 0, type = s.typeof(obj)},{
+					__index = function(s,i)
+						s.calls = s.calls+1
+						local prop, method = props[i], methods[i]
+						local output = (prop and prop()) or method
+						if not(output) then
+							s.method = i
+							return d.hook_method
+						end
+					end
+				})
+			end
+
 		end
 	end)
 
