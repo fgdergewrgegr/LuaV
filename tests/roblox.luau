@@ -1,3 +1,13 @@
+local genv = {}
+local task = {wait = function() end}
+getgenv = getfenv
+warn = function(...)
+	print("Warn:",...)
+end
+error = function(...)
+	print("Error:",...)
+end
+--------------------------------------------------------------------------------------------------------------
 --init env
 	getgenv().__luaw__ = {
 		funcs = {
@@ -87,52 +97,52 @@ end
 	port_save("tonumber","int")
 	port_save("loadstring","load")
 
---objects
-	-- o["_____"] = cloneref(game:GetService("_____"))
-		o["w"] = cloneref(game:GetService("Workspace"))
-		o["l"] = cloneref(game:GetService("Lighting"))
-		o["p"] = cloneref(game:GetService("Players"))
-		o["r"] = cloneref(game:GetService("RunService"))
-		o["db"] = cloneref(game:GetService("Debris"))
-		o["rs"] = cloneref(game:GetService("ReplicatedStorage"))
-		o["rf"] = cloneref(game:GetService("ReplicatedFirst"))
-		o["sg"] = cloneref(game:GetService("StarterGui"))
-		o["ms"] = cloneref(game:GetService("MaterialService"))
-		o["cg"] = gethui() or cloneref(game:GetService("CoreGui"))
-		o["cs"] = cloneref(game:GetService("TextChatService"))
-		o["ps"] = cloneref(game:GetService("PhysicsService"))
-		o["hs"] = cloneref(game:GetService("HttpService"))
-		o["ts"] = cloneref(game:GetService("TeleportService"))
-		o["uis"] = cloneref(game:GetService("UserInputService"))
-		o["vim"] = cloneref(game:GetService("VirtualInputManager"))
+-- --objects
+-- 	-- o["_____"] = cloneref(game:GetService("_____"))
+-- 		o["w"] = cloneref(game:GetService("Workspace"))
+-- 		o["l"] = cloneref(game:GetService("Lighting"))
+-- 		o["p"] = cloneref(game:GetService("Players"))
+-- 		o["r"] = cloneref(game:GetService("RunService"))
+-- 		o["db"] = cloneref(game:GetService("Debris"))
+-- 		o["rs"] = cloneref(game:GetService("ReplicatedStorage"))
+-- 		o["rf"] = cloneref(game:GetService("ReplicatedFirst"))
+-- 		o["sg"] = cloneref(game:GetService("StarterGui"))
+-- 		o["ms"] = cloneref(game:GetService("MaterialService"))
+-- 		o["cg"] = gethui() or cloneref(game:GetService("CoreGui"))
+-- 		o["cs"] = cloneref(game:GetService("TextChatService"))
+-- 		o["ps"] = cloneref(game:GetService("PhysicsService"))
+-- 		o["hs"] = cloneref(game:GetService("HttpService"))
+-- 		o["ts"] = cloneref(game:GetService("TeleportService"))
+-- 		o["uis"] = cloneref(game:GetService("UserInputService"))
+-- 		o["vim"] = cloneref(game:GetService("VirtualInputManager"))
 
-	-- o["_____"] = 
-		o["mhv3"] = Vector3.new("inf", "inf", "inf")
-		o["nv3"] = Vector3.new()
+-- 	-- o["_____"] = 
+-- 		o["mhv3"] = Vector3.new("inf", "inf", "inf")
+-- 		o["nv3"] = Vector3.new()
 
-	-- o["_____"] = o._____.
-		o["me"] = o.p.LocalPlayer
-		o["old_char"] = o.me.Character
-		if o.old_char then
-			local char = o.old_char
-			o["old_hrp"] = char:FindFirstChild("HumanoidRootPart")
-			o["old_hum"] = char:FindFirstChild("Humanoid")
-			o["old_hd"] = char:FindFirstChild("Head")
-			o["old_tr"] = char:FindFirstChild("Torso")
-		end
-		o["cam"] = o.w.CurrentCamera
-		o["m"] = o.me:GetMouse()
-		o["name"] = o.me.Name
-		o["dname"] = o.me.DisplayName
-		o["pg"] = o.me.PlayerGui
-		o["muid"] = o.me.UserId
-		o["rt"] = o.p.RespawnTime
+-- 	-- o["_____"] = o._____.
+-- 		o["me"] = o.p.LocalPlayer
+-- 		o["old_char"] = o.me.Character
+-- 		if o.old_char then
+-- 			local char = o.old_char
+-- 			o["old_hrp"] = char:FindFirstChild("HumanoidRootPart")
+-- 			o["old_hum"] = char:FindFirstChild("Humanoid")
+-- 			o["old_hd"] = char:FindFirstChild("Head")
+-- 			o["old_tr"] = char:FindFirstChild("Torso")
+-- 		end
+-- 		o["cam"] = o.w.CurrentCamera
+-- 		o["m"] = o.me:GetMouse()
+-- 		o["name"] = o.me.Name
+-- 		o["dname"] = o.me.DisplayName
+-- 		o["pg"] = o.me.PlayerGui
+-- 		o["muid"] = o.me.UserId
+-- 		o["rt"] = o.p.RespawnTime
 
-		local DCSCE = o.rs:FindFirstChild("DefaultChatSystemChatEvents")
-		if DCSCE then
-			o["saymsg"] = DCSCE:WaitForChild("SayMessageRequest")
-			o["getmsg"] = DCSCE:WaitForChild("SayMessageRequest")
-		end; DCSCE = nil
+-- 		local DCSCE = o.rs:FindFirstChild("DefaultChatSystemChatEvents")
+-- 		if DCSCE then
+-- 			o["saymsg"] = DCSCE:WaitForChild("SayMessageRequest")
+-- 			o["getmsg"] = DCSCE:WaitForChild("SayMessageRequest")
+-- 		end; DCSCE = nil
 	
 --kernel
 	function k.type(obj)
@@ -182,7 +192,7 @@ end
 	end)
 
 --normal
-	local o_r_Heartbeat, o_r_RenderStepped = o.r.Heartbeat, o.r.RenderStepped
+	-- local o_r_Heartbeat, o_r_RenderStepped = o.r.Heartbeat, o.r.RenderStepped
 	local ft1, ft2 = [[return function(num)
 		local event = ]],[[
 		if not(num) then return event:Wait()
@@ -247,3 +257,27 @@ end
 		o.vim:SendMouseButtonEvent(o.m.X, o.m.Y, 0, false, game, 0)
 	end)
 
+
+------------------------------------------------------------------------------------------------------------------
+print("----------------------------------------------")
+local function ppp(...)
+	print("------------------------")
+	print(...)
+	print("------------------------")
+end
+
+local function try(name, func, ...)
+	local s,e = pcall(func, ...)
+	print("Try:",name,s)
+	if not(s) then error(e) end
+end
+
+try("rtext", function()
+	n.rt(100)
+	n.rt(100, "nl")
+	n.rt(100, "lns")
+	n.rt(100, "12345")
+	n.rt(100, "")
+end)
+
+try("bchat", n.bchat, "test")
